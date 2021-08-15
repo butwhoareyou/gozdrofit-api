@@ -1,3 +1,30 @@
+Unofficial implementation of Zdrofit Polska API in Golang.
+
+---
+
+## Usage
+
+```go
+api := gozdrofitapi.NewHttpApi(*baseUrl, http.Client{}, true)
+
+authenticated, err := api.Authenticate(gozdrofitapi.LoginRequest{
+    RememberMe: true,
+    Login:      "Username",
+    Password:   "Password",
+})
+
+if err != nil {
+    return err
+}
+
+dailyClasses, err := api.DailyClasses(gozdrofitapi.DailyClassesRequest{
+    ClubId: 1,
+    Date:   gozdrofitapi.Date{Time: time.Now()},
+})
+```
+
+## API Documentation
+
 ### Login
 
 `POST` `/ClientPortal2/Auth/Login`
