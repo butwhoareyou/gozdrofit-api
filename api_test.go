@@ -15,17 +15,13 @@ import (
 func TestHttpApi_Authenticate_Success(t *testing.T) {
 	mockHttpResponseBody := "{\"User\":{\"Member\":{\"Id\":99,\"HomeClubId\":99,\"DefaultClubId\":99}}}"
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		setCookie(
-			authenticationCookie,
-			"token",
-			r.Host,
-			w)
-		_, _ = fmt.Fprintf(w, mockHttpResponseBody)
+		setCookie(authenticationCookie, "token", w)
+		_, _ = fmt.Fprint(w, mockHttpResponseBody)
 	}))
 	defer server.Close()
-	url, err := url.Parse(server.URL)
+	serverUrl, err := url.Parse(server.URL)
 	require.NoError(t, err)
-	api := NewHttpApi(*url, http.Client{Jar: &TestJar{}}, true)
+	api := NewHttpApi(*serverUrl, http.Client{Jar: &TestJar{}}, true)
 	request := LoginRequest{true, "login", "password"}
 
 	resp, err := api.Authenticate(request)
@@ -49,12 +45,12 @@ func TestHttpApi_DailyClasses_Success(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		expectCookie(t, authenticationCookie, r)
 
-		_, _ = fmt.Fprintf(w, mockHttpResponseBody)
+		_, _ = fmt.Fprint(w, mockHttpResponseBody)
 	}))
 	defer server.Close()
-	url, err := url.Parse(server.URL)
+	serverUrl, err := url.Parse(server.URL)
 	require.NoError(t, err)
-	api := NewHttpApi(*url, NewDefaultHttpClient(), true)
+	api := NewHttpApi(*serverUrl, NewDefaultHttpClient(), true)
 	setDummyAuthentication(api)
 	request := DailyClassesRequest{99, Date{time.Now()}}
 
@@ -97,12 +93,12 @@ func TestHttpApi_BookClass(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		expectCookie(t, authenticationCookie, r)
 
-		_, _ = fmt.Fprintf(w, mockHttpResponseBody)
+		_, _ = fmt.Fprint(w, mockHttpResponseBody)
 	}))
 	defer server.Close()
-	url, err := url.Parse(server.URL)
+	serverUrl, err := url.Parse(server.URL)
 	require.NoError(t, err)
-	api := NewHttpApi(*url, NewDefaultHttpClient(), true)
+	api := NewHttpApi(*serverUrl, NewDefaultHttpClient(), true)
 	setDummyAuthentication(api)
 	request := BookClassRequest{99}
 
@@ -116,12 +112,12 @@ func TestHttpApi_CancelClassBooking(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		expectCookie(t, authenticationCookie, r)
 
-		_, _ = fmt.Fprintf(w, mockHttpResponseBody)
+		_, _ = fmt.Fprint(w, mockHttpResponseBody)
 	}))
 	defer server.Close()
-	url, err := url.Parse(server.URL)
+	serverUrl, err := url.Parse(server.URL)
 	require.NoError(t, err)
-	api := NewHttpApi(*url, NewDefaultHttpClient(), true)
+	api := NewHttpApi(*serverUrl, NewDefaultHttpClient(), true)
 	setDummyAuthentication(api)
 	request := CancelBookingRequest{99}
 
@@ -130,7 +126,7 @@ func TestHttpApi_CancelClassBooking(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func setCookie(name string, value string, domain string, w http.ResponseWriter) {
+func setCookie(name string, value string, w http.ResponseWriter) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     name,
 		Value:    value,

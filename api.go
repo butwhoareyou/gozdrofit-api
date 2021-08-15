@@ -143,7 +143,7 @@ func (api *httpApi) Authenticate(request LoginRequest) (*LoginResponse, error) {
 	return &loginResponse, nil
 }
 
-// Fetches DailyClasses using possible filters
+// DailyClasses Fetches daily classes using possible filters
 func (api *httpApi) DailyClasses(request DailyClassesRequest) (*DailyClassesResponse, error) {
 	resp, err := post(&api.httpClient, api.baseUrl.String()+"/ClientPortal2/Classes/ClassCalendar/DailyClasses", request)
 	if err != nil {
