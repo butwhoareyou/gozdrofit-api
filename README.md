@@ -1,14 +1,14 @@
 [![Build Status](https://github.com/go-pkgz/auth/workflows/build/badge.svg)](https://github.com/butwhoare-you/gozdrofit-api/actions)
 [![Coverage Status](https://coveralls.io/repos/github/butwhoareyou/gozdrofit-api/badge.svg?branch=master)](https://coveralls.io/github/butwhoareyou/gozdrofit-api?branch=master)
 
-Unofficial implementation of Zdrofit Polska API in Golang.
+# Unofficial implementation of Zdrofit Polska API in Golang.
 
 ---
 
 ## Usage
 
 ```go
-api := gozdrofitapi.NewHttpApi(*baseUrl, http.Client{}, true)
+api := gozdrofitapi.NewHttpApi(*baseUrl, gozdrofitapi.NewDefaultHttpClient(), true)
 
 authenticated, err := api.Authenticate(gozdrofitapi.LoginRequest{
     RememberMe: true,
